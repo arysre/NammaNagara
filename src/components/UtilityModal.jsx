@@ -1,0 +1,16 @@
+import { Lightbulb, Phone, X } from 'lucide-react'
+import { useState } from 'react'
+
+export function HelplineModal({ onClose }) {
+  return <div className="modal-scrim" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose() }}><section className="utility-modal modal-surface" role="dialog" aria-modal="true" aria-labelledby="helpline-title"><div className="modal-topline"><div><span className="eyebrow">Contact information</span><h2 id="helpline-title"><Phone size={18} />Helplines</h2></div><button className="icon-button" onClick={onClose} aria-label="Close helplines"><X size={18} /></button></div><div className="placeholder-warning">Placeholder numbers for this demo — do not call.</div><div className="helpline-row"><span>BBMP control room</span><strong>080-0000-0000</strong></div><div className="helpline-row"><span>Water board (BWSSB)</span><strong>080-0000-1111</strong></div><div className="helpline-row"><span>Electricity (BESCOM)</span><strong>1912 <small>placeholder</small></strong></div><p className="fine-print">Numbers above are not verified emergency contacts. Use official government sources for real assistance.</p></section></div>
+}
+
+export function SuggestModal({ onClose }) {
+  const [submitted, setSubmitted] = useState(false)
+  const [idea, setIdea] = useState('')
+  return <div className="modal-scrim" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose() }}><section className="utility-modal modal-surface" role="dialog" aria-modal="true" aria-labelledby="suggest-title"><div className="modal-topline"><div><span className="eyebrow">Prototype feedback</span><h2 id="suggest-title"><Lightbulb size={18} />Suggest a feature</h2></div><button className="icon-button" onClick={onClose} aria-label="Close suggestion"><X size={18} /></button></div>{submitted ? <div className="success-large"><Lightbulb size={20} /><h3>Suggestion noted</h3><p>Thanks. Your idea is stored only for this demo session.</p></div> : <form onSubmit={(event) => { event.preventDefault(); if (idea.trim()) setSubmitted(true) }} className="grievance-form"><label className="form-field"><span>What would help residents?</span><textarea rows="4" required value={idea} onChange={(event) => setIdea(event.target.value)} placeholder="Describe a feature or improvement." /></label><div className="modal-actions"><button className="quiet-button" type="button" onClick={onClose}>Cancel</button><button className="primary-button">Send suggestion</button></div></form>}</section></div>
+}
+
+export function AboutDialog() {
+  return <dialog className="about-dialog" id="about-modal"><div className="modal-topline"><div><span className="eyebrow">Project note</span><h2>About NammaBLR</h2></div><form method="dialog"><button className="icon-button" aria-label="Close about"><X size={18} /></button></form></div><p>NammaBLR is a frontend-only civic grievance prototype. It uses mock posts to demonstrate how residents could report local problems, find nearby issues, and follow status updates.</p><p>Nothing submitted here is sent to a government service. Ward numbers, responses, user counts and contact details are illustrative.</p><form method="dialog"><button className="primary-button">Close</button></form></dialog>
+}
