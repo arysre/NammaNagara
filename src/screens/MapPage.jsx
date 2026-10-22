@@ -1,10 +1,21 @@
 import { divIcon } from 'leaflet'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import { MapPin } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useApp } from '../context/AppContext'
 import PostCard, { filterAndSortPosts } from '../components/PostCard'
 import 'leaflet/dist/leaflet.css'
+
+const statusColors = { Active: '#b16b53', Acknowledged: '#778e78', 'In progress': '#ad8c55', Completed: '#8495a0' }
+const statusIcons = Object.fromEntries(Object.entries(statusColors).map(([status, color]) => [
+  status,
+  divIcon({
+    className: 'issue-marker-wrap',
+    html: `<span class="issue-marker" style="--marker-color:${color}"></span>`,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+  }),
+]))
 
 function ResizeMap() {
   const map = useMap()
@@ -14,7 +25,7 @@ function ResizeMap() {
 
 export default function MapPage({ onOpenPost }) {
   const { posts, filters } = useApp()
-  const items = filterAndSortPosts(posts, filters)
+  const items = useMemo(() => filterAndSortPosts(posts, filters), [posts, filters])
   const [selectedId, setSelectedId] = useState(null)
   const selected = items.find((post) => post.id === selectedId)
   return (
@@ -24,9 +35,7 @@ export default function MapPage({ onOpenPost }) {
       <div className="map-wrapper"><MapContainer center={[12.9716, 77.5946]} zoom={11} scrollWheelZoom className="leaflet-map">
         <ResizeMap /><TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {items.map((post) => {
-          const color = { Active: '#b16b53', Acknowledged: '#778e78', 'In progress': '#ad8c55', Completed: '#8495a0' }[post.status]
-          const icon = divIcon({ className: 'issue-marker-wrap', html: `<span class="issue-marker" style="--marker-color:${color}"></span>`, iconSize: [22, 22], iconAnchor: [11, 11] })
-          return <Marker key={post.id} position={post.coords} icon={icon} eventHandlers={{ click: () => setSelectedId(post.id) }}><Popup><strong>{post.title}</strong><br />{post.area} · {post.status}<br /><button className="map-popup-button" onClick={() => onOpenPost(post)}>Open report</button></Popup></Marker>
+          return <Marker key={post.id} position={post.coords} icon={statusIcons[post.status]} eventHandlers={{ click: () => setSelectedId(post.id) }}><Popup><strong>{post.title}</strong><br />{post.area} · {post.status}<br /><button className="map-popup-button" onClick={() => onOpenPost(post)}>Open report</button></Popup></Marker>
         })}
       </MapContainer></div>
       {selected && <div className="map-selected"><button className="text-button map-selected-close" onClick={() => setSelectedId(null)}>Close</button><PostCard post={selected} onOpen={onOpenPost} /></div>}

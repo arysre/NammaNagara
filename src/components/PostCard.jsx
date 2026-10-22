@@ -16,8 +16,8 @@ function score(criticality) {
 }
 
 export function filterAndSortPosts(posts, filters, mode = 'feed') {
+  const search = filters.query.trim().toLowerCase()
   const filtered = posts.filter((post) => {
-    const search = filters.query.trim().toLowerCase()
     const matchesQuery = !search || `${post.title} ${post.body} ${post.area} ${post.department} ${post.author}`.toLowerCase().includes(search)
     return (filters.ward === 'all' || filters.ward === post.ward)
       && (filters.status === 'All conditions' || filters.status === post.status)
@@ -38,7 +38,7 @@ export default function PostCard({ post, onOpen }) {
   const [notice, setNotice] = useState('')
   const handleShare = async (event) => {
     event.stopPropagation()
-    const url = `${window.location.origin}/?post=${post.id}`
+    const url = `${window.location.origin}${window.location.pathname}#/?post=${encodeURIComponent(post.id)}`
     try {
       if (navigator.share) {
         await navigator.share({ title: post.title, text: `NammaNagara report: ${post.title}`, url })

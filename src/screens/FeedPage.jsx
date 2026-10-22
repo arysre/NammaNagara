@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { ArrowDownWideNarrow, FilePlus2, SlidersHorizontal } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { filterAndSortPosts } from '../components/PostCard'
@@ -5,7 +6,7 @@ import PostCard from '../components/PostCard'
 
 export default function FeedPage({ onOpenPost, onPost, onFilters, trending = false }) {
   const { posts, filters } = useApp()
-  const items = filterAndSortPosts(posts, filters, trending ? 'trending' : 'feed')
+  const items = useMemo(() => filterAndSortPosts(posts, filters, trending ? 'trending' : 'feed'), [posts, filters, trending])
   return (
     <section className="feed-column">
       <div className="feed-heading">
