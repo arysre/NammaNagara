@@ -85,7 +85,11 @@ export default function App() {
                   ? <GovDeskPage employeeEmail={govEmployeeEmail} onSignOut={() => { setGovEmployeeEmail(''); navigate('/') }} />
                   : <Navigate to="/employee-access" replace />}
                 />
-                <Route path="/profile" element={<ProfilePage onOpenPost={openPost} />} />
+                <Route path="/profile" element={<ProfilePage
+                  onOpenPost={openPost}
+                  employeeEmail={govEmployeeEmail}
+                  onEmployeeSignOut={() => { setGovEmployeeEmail(''); navigate('/employee-access') }}
+                />} />
                 <Route path="*" element={<FeedPage onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} canPost={!govEmployeeEmail} />} />
               </Routes>
             </Suspense>
