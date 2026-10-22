@@ -41,7 +41,7 @@ export default function PostCard({ post, onOpen }) {
     const url = `${window.location.origin}/?post=${post.id}`
     try {
       if (navigator.share) {
-        await navigator.share({ title: post.title, text: `NammaBLR report: ${post.title}`, url })
+        await navigator.share({ title: post.title, text: `NammaNagara report: ${post.title}`, url })
         setNotice('Shared')
       } else if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(url)

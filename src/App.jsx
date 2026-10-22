@@ -66,7 +66,7 @@ export default function App() {
             </Suspense>
           </main>
           {usesFilters && <Filters drawerOpen={showFilters} onClose={() => setShowFilters(false)} />}
-          {!usesFilters && <aside className="context-panel"><span className="eyebrow">NammaBLR prototype</span><h2>What’s in this demo</h2><p>Twenty realistic sample reports across Bengaluru areas. All responses and status changes are local to this session.</p><div className="context-stat"><strong>{posts.length}</strong><span>mock reports</span></div><button className="quiet-button" onClick={() => navigate('/')}><MessageSquareText size={15} />Back to feed</button><p className="context-disclaimer">Not connected to BBMP, BWSSB, BESCOM or any official service.</p></aside>}
+          {!usesFilters && <aside className="context-panel"><span className="eyebrow">NammaNagara prototype</span><h2>What’s in this demo</h2><p>Twenty realistic sample reports across Bengaluru areas. All responses and status changes are local to this session.</p><div className="context-stat"><strong>{posts.length}</strong><span>mock reports</span></div><button className="quiet-button" onClick={() => navigate('/')}><MessageSquareText size={15} />Back to feed</button><p className="context-disclaimer">Not connected to BBMP, BWSSB, BESCOM or any official service.</p></aside>}
         </div>
       </div>
       <nav className="mobile-tabbar" aria-label="Mobile navigation">

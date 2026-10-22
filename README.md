@@ -1,4 +1,4 @@
-# NammaBLR
+# NammaNagara
 
 A frontend-only civic grievance prototype for Bengaluru, built with React, Vite, React Router and Tailwind CSS.
 
@@ -15,7 +15,7 @@ Vite prints a local URL after the development server starts. To create a product
 
 This project includes a GitHub Actions workflow that builds and publishes the site to GitHub Pages whenever changes are pushed to the `main` branch.
 
-1. Create a GitHub repository for this project (for example, `nammaBLR`) and push the project files to its `main` branch.
+1. Create a GitHub repository for this project (for example, `NammaNagara`) and push the project files to its `main` branch.
 2. In the repository, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
 3. Open the **Actions** tab and wait for the **Deploy to GitHub Pages** workflow to finish. The published URL will be shown in the workflow run and in **Settings → Pages**.
 

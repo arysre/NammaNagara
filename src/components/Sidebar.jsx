@@ -17,7 +17,7 @@ export default function Sidebar({ onPost, onSuggest, mobileOpen, closeMobile }) 
       <aside className={`sidebar ${mobileOpen ? 'sidebar-open' : ''}`}>
         <div className="brand">
           <div className="brand-mark">N</div>
-          <div><strong>NammaBLR</strong><span>Civic issues, clearly tracked</span></div>
+          <div><strong>NammaNagara</strong><span>Civic issues, clearly tracked</span></div>
           <button className="icon-button sidebar-close" aria-label="Close menu" onClick={closeMobile}><X size={17} /></button>
         </div>
         <nav className="side-nav" aria-label="Main navigation">
