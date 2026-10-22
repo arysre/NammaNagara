@@ -44,7 +44,7 @@ export default function GovDeskPage({ employeeEmail, onSignIn, onSignOut }) {
   }
   return (
     <section className="screen-column">
-      <div className="page-heading"><span className="eyebrow">Prototype · officials' view · {employeeEmail}</span><h1>Gov desk</h1><p>Review reports and simulate status updates. Changes appear in the community feed.</p><button className="quiet-button" onClick={onSignOut}>Exit employee preview</button></div>
+      <div className="page-heading"><span className="eyebrow">Prototype · officials' view · {employeeEmail}</span><h1>Gov desk</h1><p>Review reports and simulate status updates. Changes appear in the community feed.</p></div>
       <p className="gov-demo-warning">Demo employee view only. Email identity is not verified; all reports and updates are sample data stored in this browser session.</p>
       <div className="gov-toolbar"><label className="filter-field"><span>Department view</span><select value={department} onChange={(event) => setDepartment(event.target.value)}>{departments.map((name) => <option key={name}>{name}</option>)}</select></label><span className="gov-count">{list.length} reports</span></div>
       {notice && <div className="success-note" role="status"><Check size={15} />{notice}</div>}

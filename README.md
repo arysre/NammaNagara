@@ -44,6 +44,7 @@ src/
 - The helpline numbers are explicitly labelled placeholders and must not be used to request real assistance.
 - There is no backend, authentication, official government connection or real AI service.
 - The Government Desk has a demo-only `.gov.in` email-format gate to showcase the employee view. It does not verify identity or secure the route; real staff-only access requires server-verified authentication and backend authorization.
+- Resident navigation includes feature suggestions and omits the Government Desk. After entering a `.gov.in` address in the demo employee sign-in, the employee navigation shows the Government Desk and hides feature suggestions and the resident posting controls.
 
 Design tokens live together at the top of `src/index.css`; Tailwind color and font aliases are defined in `tailwind.config.js`.
 

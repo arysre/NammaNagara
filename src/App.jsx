@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
-import { NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
-import { BarChart3, FilePlus2, Flame, Map, MessageSquareText, UserRound } from 'lucide-react'
+import { Navigate, NavLink, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { BarChart3, FilePlus2, Flame, Map, MessageSquareText, UserRound, Users } from 'lucide-react'
 import Sidebar from './components/Sidebar'
 import Topbar from './components/Topbar'
 import Filters from './components/Filters'
@@ -16,10 +16,17 @@ const AnalyticsPage = lazy(() => import('./screens/AnalyticsPage'))
 const GovDeskPage = lazy(() => import('./screens/GovDeskPage'))
 const ProfilePage = lazy(() => import('./screens/ProfilePage'))
 
-const mobileLinks = [
+const residentMobileLinks = [
   { to: '/', label: 'Feed', icon: MessageSquareText, end: true },
   { to: '/map', label: 'Map', icon: Map },
   { to: '/trending', label: 'Critical', icon: Flame },
+  { to: '/analytics', label: 'Stats', icon: BarChart3 },
+  { to: '/profile', label: 'Profile', icon: UserRound },
+]
+const employeeMobileLinks = [
+  { to: '/', label: 'Feed', icon: MessageSquareText, end: true },
+  { to: '/map', label: 'Map', icon: Map },
+  { to: '/gov-desk', label: 'Gov desk', icon: Users },
   { to: '/analytics', label: 'Stats', icon: BarChart3 },
   { to: '/profile', label: 'Profile', icon: UserRound },
 ]
@@ -37,6 +44,7 @@ export default function App() {
   const [activePostId, setActivePostId] = useState(null)
   const [govEmployeeEmail, setGovEmployeeEmail] = useState('')
   const activePost = useMemo(() => posts.find((post) => post.id === activePostId), [posts, activePostId])
+  const mobileLinks = govEmployeeEmail ? employeeMobileLinks : residentMobileLinks
   const usesFilters = ['/', '/trending', '/map'].includes(location.pathname)
   useEffect(() => {
     const postId = searchParams.get('post')
@@ -49,20 +57,36 @@ export default function App() {
   }
   return (
     <div className="app-shell">
-      <Sidebar onPost={() => setShowGrievance(true)} onSuggest={() => setShowSuggest(true)} mobileOpen={mobileOpen} closeMobile={() => setMobileOpen(false)} />
+      <Sidebar
+        onPost={() => setShowGrievance(true)}
+        onSuggest={() => setShowSuggest(true)}
+        employeeEmail={govEmployeeEmail}
+        onEmployeeSignOut={() => { setGovEmployeeEmail(''); navigate('/') }}
+        mobileOpen={mobileOpen}
+        closeMobile={() => setMobileOpen(false)}
+      />
       <div className="main-column">
         <Topbar onHelpline={() => setShowHelpline(true)} onMenu={() => setMobileOpen(true)} />
         <div className={`content-layout ${usesFilters ? '' : 'content-no-filters'}`}>
           <main className="main-content">
             <Suspense fallback={<div className="screen-loading" role="status">Loading this screen…</div>}>
               <Routes>
-                <Route path="/" element={<FeedPage onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} />} />
+                <Route path="/" element={<FeedPage onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} canPost={!govEmployeeEmail} />} />
                 <Route path="/map" element={<MapPage onOpenPost={openPost} />} />
-                <Route path="/trending" element={<FeedPage trending onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} />} />
+                <Route path="/trending" element={<FeedPage trending onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} canPost={!govEmployeeEmail} />} />
                 <Route path="/analytics" element={<AnalyticsPage />} />
-                <Route path="/gov-desk" element={<GovDeskPage employeeEmail={govEmployeeEmail} onSignIn={setGovEmployeeEmail} onSignOut={() => setGovEmployeeEmail('')} />} />
+                <Route
+                  path="/employee-access"
+                  element={govEmployeeEmail
+                    ? <Navigate to="/gov-desk" replace />
+                    : <GovDeskPage onSignIn={(email) => { setGovEmployeeEmail(email); navigate('/gov-desk') }} />}
+                />
+                <Route path="/gov-desk" element={govEmployeeEmail
+                  ? <GovDeskPage employeeEmail={govEmployeeEmail} onSignOut={() => { setGovEmployeeEmail(''); navigate('/') }} />
+                  : <Navigate to="/employee-access" replace />}
+                />
                 <Route path="/profile" element={<ProfilePage onOpenPost={openPost} />} />
-                <Route path="*" element={<FeedPage onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} />} />
+                <Route path="*" element={<FeedPage onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} canPost={!govEmployeeEmail} />} />
               </Routes>
             </Suspense>
           </main>
@@ -72,14 +96,14 @@ export default function App() {
       </div>
       <nav className="mobile-tabbar" aria-label="Mobile navigation">
         {mobileLinks.map(({ to, label, icon: Icon, end }) => <NavLink key={to} to={to} end={end} className={({ isActive }) => `mobile-tab ${isActive ? 'mobile-tab-active' : ''}`}><Icon size={18} /><span>{label}</span></NavLink>)}
-        <button className="mobile-tab mobile-create" onClick={() => setShowGrievance(true)}><FilePlus2 size={18} /><span>Post</span></button>
+        {!govEmployeeEmail && <button className="mobile-tab mobile-create" onClick={() => setShowGrievance(true)}><FilePlus2 size={18} /><span>Post</span></button>}
       </nav>
       <Chatbot />
       <AboutDialog />
-      {showGrievance && <GrievanceModal onClose={() => setShowGrievance(false)} />}
+      {showGrievance && !govEmployeeEmail && <GrievanceModal onClose={() => setShowGrievance(false)} />}
       {activePost && <DetailModal post={activePost} onClose={closePost} />}
       {showHelpline && <HelplineModal onClose={() => setShowHelpline(false)} />}
-      {showSuggest && <SuggestModal onClose={() => setShowSuggest(false)} />}
+      {showSuggest && !govEmployeeEmail && <SuggestModal onClose={() => setShowSuggest(false)} />}
     </div>
   )
 }
