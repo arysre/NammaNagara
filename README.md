@@ -43,6 +43,7 @@ src/
 - The map uses OpenStreetMap tiles and approximate Bengaluru coordinates. It is not an official issue map.
 - The helpline numbers are explicitly labelled placeholders and must not be used to request real assistance.
 - There is no backend, authentication, official government connection or real AI service.
+- The Government Desk has a demo-only `.gov.in` email-format gate to showcase the employee view. It does not verify identity or secure the route; real staff-only access requires server-verified authentication and backend authorization.
 
 Design tokens live together at the top of `src/index.css`; Tailwind color and font aliases are defined in `tailwind.config.js`.
 

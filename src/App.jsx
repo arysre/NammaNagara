@@ -35,6 +35,7 @@ export default function App() {
   const [showFilters, setShowFilters] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activePostId, setActivePostId] = useState(null)
+  const [govEmployeeEmail, setGovEmployeeEmail] = useState('')
   const activePost = useMemo(() => posts.find((post) => post.id === activePostId), [posts, activePostId])
   const usesFilters = ['/', '/trending', '/map'].includes(location.pathname)
   useEffect(() => {
@@ -59,7 +60,7 @@ export default function App() {
                 <Route path="/map" element={<MapPage onOpenPost={openPost} />} />
                 <Route path="/trending" element={<FeedPage trending onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} />} />
                 <Route path="/analytics" element={<AnalyticsPage />} />
-                <Route path="/gov-desk" element={<GovDeskPage />} />
+                <Route path="/gov-desk" element={<GovDeskPage employeeEmail={govEmployeeEmail} onSignIn={setGovEmployeeEmail} onSignOut={() => setGovEmployeeEmail('')} />} />
                 <Route path="/profile" element={<ProfilePage onOpenPost={openPost} />} />
                 <Route path="*" element={<FeedPage onOpenPost={openPost} onPost={() => setShowGrievance(true)} onFilters={() => setShowFilters(true)} />} />
               </Routes>
