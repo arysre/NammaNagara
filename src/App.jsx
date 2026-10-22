@@ -35,7 +35,7 @@ export default function App() {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { posts } = useApp()
+  const { posts, addSuggestion } = useApp()
   const [showGrievance, setShowGrievance] = useState(false)
   const [showHelpline, setShowHelpline] = useState(false)
   const [showSuggest, setShowSuggest] = useState(false)
@@ -107,7 +107,7 @@ export default function App() {
       {showGrievance && !govEmployeeEmail && <GrievanceModal onClose={() => setShowGrievance(false)} />}
       {activePost && <DetailModal post={activePost} onClose={closePost} />}
       {showHelpline && <HelplineModal onClose={() => setShowHelpline(false)} />}
-      {showSuggest && !govEmployeeEmail && <SuggestModal onClose={() => setShowSuggest(false)} />}
+      {showSuggest && !govEmployeeEmail && <SuggestModal onClose={() => setShowSuggest(false)} onSubmit={addSuggestion} />}
     </div>
   )
 }

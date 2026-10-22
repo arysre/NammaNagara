@@ -44,6 +44,7 @@ export function AppProvider({ children }) {
     { name: 'A resident nearby', text: 'I have reported this too. The issue is still there this morning.', time: '2h ago' },
     { name: 'Ward volunteer', text: 'Thanks for documenting the location. I have shared it with the local team.', time: '1h ago' },
   ]])))
+  const [suggestions, setSuggestions] = useState([])
   const [filters, setFilters] = useState({
     ward: 'all',
     status: 'All conditions',
@@ -55,6 +56,10 @@ export function AppProvider({ children }) {
   const toggleAffected = (id) => dispatch({ type: 'toggle-affected', id })
   const updateStatus = (id, status) => dispatch({ type: 'update-status', id, status, date: new Date().toISOString() })
   const addPost = (post) => dispatch({ type: 'add-post', post })
+  const addSuggestion = (text) => setSuggestions((current) => [
+    { id: `suggestion-${Date.now()}`, text, date: new Date().toISOString() },
+    ...current,
+  ])
   const addComment = (id, text) => {
     setCommentsByPost((current) => ({
       ...current,
@@ -63,9 +68,9 @@ export function AppProvider({ children }) {
     dispatch({ type: 'add-comment', id })
   }
   const value = useMemo(() => ({
-    posts: state.posts, commentsByPost, filters, setFilters, amplified: state.amplified, affected: state.affected, toggleAmplify, toggleAffected,
-    updateStatus, addPost, addComment,
-  }), [state, commentsByPost, filters])
+    posts: state.posts, commentsByPost, suggestions, filters, setFilters, amplified: state.amplified, affected: state.affected, toggleAmplify, toggleAffected,
+    updateStatus, addPost, addComment, addSuggestion,
+  }), [state, commentsByPost, suggestions, filters])
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }

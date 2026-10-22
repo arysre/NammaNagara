@@ -8,7 +8,7 @@ const nextStatuses = ['Acknowledged', 'In progress', 'Completed']
 const govInEmail = /^[^\s@]+@(?:[a-z0-9-]+\.)*gov\.in$/i
 
 export default function GovDeskPage({ employeeEmail, onSignIn, onSignOut }) {
-  const { posts, updateStatus } = useApp()
+  const { posts, suggestions, updateStatus } = useApp()
   const [department, setDepartment] = useState('Roads')
   const [notice, setNotice] = useState('')
   const [email, setEmail] = useState('')
@@ -48,6 +48,12 @@ export default function GovDeskPage({ employeeEmail, onSignIn, onSignOut }) {
       <p className="gov-demo-warning">Demo employee view only. Email identity is not verified; all reports and updates are sample data stored in this browser session.</p>
       <div className="gov-toolbar"><label className="filter-field"><span>Department view</span><select value={department} onChange={(event) => setDepartment(event.target.value)}>{departments.map((name) => <option key={name}>{name}</option>)}</select></label><span className="gov-count">{list.length} reports</span></div>
       {notice && <div className="success-note" role="status"><Check size={15} />{notice}</div>}
+      <section className="suggestions-section">
+        <div className="suggestions-heading"><div><span className="eyebrow">Resident feedback</span><h2>Feature suggestions</h2></div><span className="gov-count">{suggestions.length} {suggestions.length === 1 ? 'request' : 'requests'}</span></div>
+        {suggestions.length
+          ? <div className="suggestions-list">{suggestions.map((suggestion) => <article className="suggestion-card" key={suggestion.id}><p>{suggestion.text}</p><span>{new Date(suggestion.date).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</span></article>)}</div>
+          : <div className="empty-state compact-empty"><h2>No suggestions yet</h2><p>Feature ideas submitted by residents will appear here during this demo session.</p></div>}
+      </section>
       <div className="gov-list">{list.map((post) => {
         const next = nextStatuses[nextStatuses.indexOf(post.status) + 1]
         return <article className="gov-card" key={post.id}><div className="gov-card-top"><div><span className="eyebrow">{post.wardNumber} · {post.area}</span><h2>{post.title}</h2></div><span className={`status-chip status-${post.status.toLowerCase().replaceAll(' ', '-')}`}>{post.status}</span></div><p>{post.body}</p><div className="gov-card-footer"><span><Clock3 size={14} />{formatRelative(post.time)}</span><span><Users size={14} />{post.affected} affected</span><span className="department-chip">{post.department}</span><div className="gov-actions">{next && <button className="primary-button" onClick={() => update(post, next)}>Mark {next}</button>}</div></div></article>
